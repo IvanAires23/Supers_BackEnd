@@ -11,12 +11,14 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  heroName String    @unique
-  email    String    @unique
-  password String
-  name     String
-  Session  Session[]
+  id        Int       @id @default(autoincrement())
+  heroName  String    @unique
+  email     String    @unique
+  password  String
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Session   Session[]
 
   @@map("users")
 }

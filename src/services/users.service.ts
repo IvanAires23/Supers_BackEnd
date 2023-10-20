@@ -1,17 +1,22 @@
 import bcrypt from 'bcrypt'
 import usersRepository from '../repository/users.respository'
 import jwt from 'jsonwebtoken'
+import { User } from '../protocols'
+import { invalidConfirmPassword } from '../errors/invalidConfirmPassword.errors'
+import { emailConflit } from '../errors/emailConfilt.error'
 
-async function create(body) {
-    const { password } = body
+async function create(body: Omit<User, "id">, confirmPassword: string) {
+    const { password, email, heroName, } = body
 
     if (!body) throw { name: 'dataInvalid', message: 'data invalid' }
 
-    const email = await usersRepository.findUserByEmail(body.email)
-    if (email) throw { name: 'emailConflit', message: 'Email is already in use' }
+    const emailUser = await usersRepository.findUserByEmail(email)
+    if (emailUser) throw emailConflit();
 
-    const heroName = await usersRepository.findUserByHeroName(body.heroName)
-    if (heroName) throw { name: 'heroNameConflit', message: 'Hero name is already in use' }
+    const heroNameUser = await usersRepository.findUserByHeroName(heroName)
+    if (heroNameUser) throw { name: 'heroNameConflit', message: 'Hero name is already in use' }
+
+    if (confirmPassword !== password) throw invalidConfirmPassword()
 
     const hashPassword = await bcrypt.hash(password, 10)
     const dataUser = { ...body, password: hashPassword }
