@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { User } from '../protocols'
 import { invalidConfirmPassword } from '../errors/invalidConfirmPassword.errors'
 import { emailConflit } from '../errors/emailConfilt.error'
+import { invalidData } from '../errors/invalidData.error'
 
 async function create(body: Omit<User, "id">, confirmPassword: string) {
     const { password, email, heroName, } = body
@@ -27,10 +28,10 @@ async function create(body: Omit<User, "id">, confirmPassword: string) {
 
 async function login(email: string, password: string) {
     const user = await usersRepository.findUserByEmail(email)
-    if (!user) throw { name: 'unauthorized', message: 'Email or password incorret' }
+    if (!user) throw invalidData()
 
     const passwordCompare = await bcrypt.compare(password, user.password)
-    if (!passwordCompare) throw { name: 'unauthorized', message: 'Email or password incorret' }
+    if (!passwordCompare) throw invalidData()
 
     const token = jwt.sign({ userId: user.id, heroName: user.heroName }, process.env.JWT_SECRET)
 
