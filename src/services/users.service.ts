@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import usersRepository from '../repository/users.respository.js'
+import usersRepository from '../repository/users.respository'
 
 async function create(body) {
     const { password } = body
@@ -17,6 +17,11 @@ async function create(body) {
 
     const user = await usersRepository.create(dataUser)
     return user
+}
+
+async function login(email, password) {
+    const emailUser = await usersRepository.findUserByEmail(email)
+
 }
 
 const usersService = {

@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors"
-import { loadEnv } from "./configs/envs.js";
+import { loadEnv } from "./configs/envs";
 
 loadEnv();
 
-import usersRouter from "./routers/users.routes.js";
+import usersRouter from "./routers/users.routes";
 
 
 

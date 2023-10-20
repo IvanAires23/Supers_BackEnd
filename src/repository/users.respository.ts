@@ -1,4 +1,4 @@
-import prisma from "../configs/database.js";
+import prisma from "../configs/database";
 
 async function create(body) {
     const { name, heroName, email, password } = body
@@ -10,6 +10,10 @@ async function create(body) {
             password
         }
     })
+}
+
+function createSession() {
+
 }
 
 async function findUserByEmail(email) {
