@@ -12,8 +12,13 @@ async function create(body) {
     })
 }
 
-function createSession() {
-
+function createSession(userId: number, token: string) {
+    return prisma.session.create({
+        data: {
+            token,
+            userId
+        }
+    })
 }
 
 async function findUserByEmail(email) {
@@ -35,7 +40,8 @@ async function findUserByHeroName(heroName) {
 const usersRepository = {
     create,
     findUserByEmail,
-    findUserByHeroName
+    findUserByHeroName,
+    createSession
 }
 
 export default usersRepository

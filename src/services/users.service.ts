@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import usersRepository from '../repository/users.respository'
+import jwt from 'jsonwebtoken'
 
 async function create(body) {
     const { password } = body
@@ -19,13 +20,23 @@ async function create(body) {
     return user
 }
 
-async function login(email, password) {
-    const emailUser = await usersRepository.findUserByEmail(email)
+async function login(email: string, password: string) {
+    const user = await usersRepository.findUserByEmail(email)
+    if (!user) throw { name: 'unauthorized', message: 'Email or password incorret' }
+
+    const passwordCompare = await bcrypt.compare(password, user.password)
+    if (!passwordCompare) throw { name: 'unauthorized', message: 'Email or password incorret' }
+
+    const token = jwt.sign({ userId: user.id, heroName: user.heroName }, process.env.JWT_SECRET)
+
+    await usersRepository.createSession(user.id, token)
+    return token
 
 }
 
 const usersService = {
-    create
+    create,
+    login
 }
 
 export default usersService

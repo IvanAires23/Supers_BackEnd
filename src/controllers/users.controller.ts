@@ -15,15 +15,21 @@ async function create(req: Request, res: Response) {
 }
 
 async function login(req: Request, res: Response) {
+    const { email, password } = req.body
     try {
-
+        const token = await usersService.login(email, password)
+        return res.status(httpStatus.OK).send({ token })
     } catch (err) {
-
+        if (err.name === 'unauthorized') {
+            return res.status(httpStatus.UNAUTHORIZED).send(err.message)
+        }
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 
 const usersController = {
-    create
+    create,
+    login
 }
 
 export default usersController
