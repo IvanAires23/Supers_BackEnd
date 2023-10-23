@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    env_file:
+      - .env.development
+    ports:
+      - 5433:5432
+    volumes:
+      - supers-volume:/var/lib/postgresql/data
+    networks:
+      - supers-network
+  node:
+    build: .
+    container_name: supers
+    ports:
+      - 3000:3000
+    env_file:
+      - .env.development
+    networks:
+      - supers-network
+    depends_on:
+      - postgres
+networks:
+  supers-network:
+volumes:
+  supers-volume:

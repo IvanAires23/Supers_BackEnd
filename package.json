@@ -6,10 +6,13 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/server.js",
+    "start:prod": "npm run dev:migration:run && npm run start",
     "test": "npm run test:load-envs -- jest --detectOpenHandles -- --runInBand",
+    "test:cov": "npm run test:load-envs -- jest -- --coverage --runInBand",
     "test:load-envs": "dotenv -e .env.test",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "dev": "cross-env NODE_ENV=development nodemon ./src/server.ts",
+    "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
     "dev:load-envs": "dotenv -e .env.development"
   },
