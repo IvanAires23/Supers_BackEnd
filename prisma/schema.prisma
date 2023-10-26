@@ -11,14 +11,18 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  heroName  String    @unique
-  email     String    @unique
+  id        Int         @id @default(autoincrement())
+  image     String
+  heroName  String      @unique
+  email     String      @unique
   password  String
   name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   Session   Session[]
+  Post      Post[]
+  Coment    Coment[]
+  Followers Followers[]
 
   @@map("users")
 }
@@ -30,4 +34,46 @@ model Session {
   token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id          Int         @id @default(autoincrement())
+  description String
+  userId      Int
+  User        User        @relation(fields: [userId], references: [id])
+  heroName    String
+  imagePost   String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Coment      Coment[]
+  Followers   Followers[]
+
+  @@map("posts")
+}
+
+model Coment {
+  id          Int      @id @default(autoincrement())
+  imagePerfil String
+  description String
+  userId      Int
+  User        User     @relation(fields: [userId], references: [id])
+  postId      Int
+  Post        Post     @relation(fields: [postId], references: [id])
+  heroName    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Followers {
+  id          Int      @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  userId      Int
+  User        User     @relation(fields: [userId], references: [id])
+  postId      Int
+  Post        Post     @relation(fields: [postId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("followers")
 }

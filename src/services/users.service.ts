@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import usersRepository from '../repository/users.respository'
+import usersRepository from '../repository/users.repository'
 import jwt from 'jsonwebtoken'
 import { User } from '../protocols'
 import { invalidConfirmPassword } from '../errors/invalidConfirmPassword.errors'
